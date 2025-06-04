@@ -12,36 +12,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function animateTitle(text, delay = 1000) {
-  let currentIndex = 0;
-  let isDeleting = false;
-  let displayedText = '';
-
-  function updateTitle() {
-    document.title = displayedText;
-
-    if (!isDeleting && currentIndex < text.length) {
-      // Печатаем текст
-      displayedText = text.substring(0, currentIndex + 1);
-      currentIndex++;
-    } else if (isDeleting && currentIndex > 0) {
-      // Удаляем текст
-      displayedText = text.substring(0, currentIndex - 1);
-      currentIndex--;
+document.addEventListener('DOMContentLoaded', function() {
+  function animateTitle(text, delay = 200) {
+    let i = 0;
+    let direction = 1;
+    
+    function update() {
+      document.title = text.substring(0, i);
+      i += direction;
+      
+      if (i > text.length) {
+        direction = -1;
+        setTimeout(update, delay * 2); // Пауза перед удалением
+      } else if (i < 0) {
+        direction = 1;
+        setTimeout(update, delay / 2); // Пауза перед новой печатью
+      } else {
+        setTimeout(update, delay); 
+      }
     }
-
-    if (currentIndex === text.length) {
-      isDeleting = true;
-      setTimeout(updateTitle, delay * 2); 
-    } else if (currentIndex === 0 && isDeleting) {
-      isDeleting = false;
-      setTimeout(updateTitle, delay / 2); 
-    } else {
-      setTimeout(updateTitle, delay); 
-    }
+    
+    update();
   }
 
-  updateTitle();
-}
-
-animateTitle("@REKVISINOV");
+  animateTitle("@REKVISINOV");
+});
